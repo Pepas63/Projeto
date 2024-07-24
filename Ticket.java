@@ -1,4 +1,4 @@
-package ProjetoBlackBox;
+package Projeto;
 
 import java.io.Serializable;
 import java.util.Date;
