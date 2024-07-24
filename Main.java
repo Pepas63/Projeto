@@ -1,4 +1,4 @@
-package ProjetoBlackBox;
+package Projeto;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
