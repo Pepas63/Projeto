@@ -3,16 +3,17 @@ package ProjetoBlackBox;
 import java.io.Serializable;
 
 public class Clientes implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private int id;
+
+private static final long serialVersionUID = 1L; // Implementação do id da versão serial
+	
+//Declaração de variavéis
+    private int id;
     private String nome;
     private String tipo; // "Final" ou "Revendedor"
     private String email;
     private String telefone;
 
+// Construtor da class Clientes
     public Clientes(int id, String nome, String tipo, String email, String telefone) {
         this.id = id;
         this.nome = nome;
