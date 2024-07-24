@@ -1,4 +1,4 @@
-package Projeto_Gestão_de_Tickets;
+package Projeto;
 
 import java.io.*;
 import java.util.ArrayList;
