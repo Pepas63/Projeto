@@ -3,6 +3,8 @@ package ProjetoBlackBox;
 import java.io.Serializable;
 import java.util.Date;
 
+
+//Declaração de variáveis
 public class Ticket implements Serializable{
     private int id;
     private Clientes cliente;
@@ -13,6 +15,8 @@ public class Ticket implements Serializable{
     private double valorServicos;
     private double valorPecas;
 
+
+    //Construtor da classe Ticket
     public Ticket(int id, Clientes cliente, String tipo, Date dataCriacao, Date dataFechamento, String descricao, double valorServicos, double valorPecas) {
         this.id = id;
         this.cliente = cliente;
