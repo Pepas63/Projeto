@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 
+
+
 public class Main {
 	private static List<Clientes> clientes = new ArrayList<>();
     private static List<Tickets> tickets = new ArrayList<>();
@@ -28,36 +30,24 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("");
-            System.out.println("Menu:");
-            System.out.println("1. Cadastrar cliente");
-            System.out.println("2. Cadastrar ticket");
-            System.out.println("3. Mostrar tickets");
-            System.out.println("4. Mostrar clientes");
-            System.out.println("5. WIP");
-            System.out.println("6. Sair");
-            System.out.println("");
+        	System.out.println("+-----------------------------+");
+            System.out.println("|           MENU              |");
+            System.out.println("+-----------------------------+");
+            System.out.println("|1 - Gestão de Clientes       |");
+            System.out.println("|2 - Gestão de Tickets        |");
+            System.out.println("|0 - Sair                     |");
+            System.out.println("+-----------------------------+");
+            System.out.print("Escolha uma opção: ");
 
-            System.out.print("Opção: ");
-            int opcao = scanner.nextInt();
-
+            int opcao = MyFunc.recebeInt();
             switch (opcao) {
                 case 1:
-                    cadastrarCliente(scanner);
+                	menuGestaoClientes();
                     break;
                 case 2:
-                    cadastrarTicket();
-                    break;
-                case 3:
-                    consultarTickets();
-                    break;
-                case 4:
-                	mostrarClientes();
-                    break;
-                case 5:
-                    //
-                    break;        
-                case 6:
+                	menuGestaoTickets();
+                    break;      
+                case 0:
                     System.out.println("Saindo...");
                     scanner.close();
                     return;
@@ -67,8 +57,40 @@ public class Main {
             }
         }
     }
+    
+    private static void menuGestaoClientes() {
+        while (true) {
+            System.out.println("\n");
+            System.out.println("+-----------------------------+");
+            System.out.println("|      Gestão de Clientes     |");
+            System.out.println("+-----------------------------+");
+            System.out.println("|1 - Adicionar Cliente        |");
+            System.out.println("|2 - Mostrar Clientes         |");
+            System.out.println("|3 - Remover Cliente (WIP)    |");
+            System.out.println("|0 - Voltar                   |");
+            System.out.println("+-----------------------------+");
+            System.out.print("Escolha uma opção: ");
 
-    private static void cadastrarCliente(Scanner scanner) {
+            int opcao = MyFunc.recebeInt();
+            switch (opcao) {
+                case 1:
+                	cadastrarCliente();
+                    break;
+                case 2:
+                	mostrarClientes();
+                    break;
+                case 3:
+                    //removerCliente();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida! Tente novamente");
+            }
+        }
+    }
+
+    private static void cadastrarCliente() {
         System.out.print("Id do Cliente: ");
         int id = MyFunc.recebeInt();
         System.out.print("Nome do cliente: ");
@@ -92,6 +114,61 @@ public class Main {
         Backup.salvarClientes(clientes, CAMINHO_FICHEIRO);
     }
 
+    
+    
+    private static void mostrarClientes() {
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente cadastrado.");
+            return;
+        }
+
+        System.out.println("\n");
+        System.out.println("+----------------------------------+");
+        System.out.println("|          Lista de Clientes       |");
+        System.out.println("+----------------------------------+");
+        for (Clientes cliente : clientes) {
+            System.out.printf("| ID: %-29d|\n", cliente.getId());
+            System.out.printf("| Nome: %-27s|\n", cliente.getNome());
+            System.out.printf("| Tipo: %-27s|\n", cliente.getTipo());
+            System.out.printf("| Email: %-26s|\n", cliente.getEmail());
+            System.out.printf("| Telefone: %-23s|\n", cliente.getTelefone());
+            System.out.println("+----------------------------------+");
+        }
+    }
+
+    
+    private static void menuGestaoTickets() {
+        while (true) {
+            System.out.println("\n");
+            System.out.println("+-----------------------------+");
+            System.out.println("|       Gestão de Tickets     |");
+            System.out.println("+-----------------------------+");
+            System.out.println("|1 - Adicionar Ticket         |");
+            System.out.println("|2 - Mostrar Tickets          |");
+            System.out.println("|3 - Remover Ticket  (WIP)    |");
+            System.out.println("|0 - Voltar                   |");
+            System.out.println("+-----------------------------+");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = MyFunc.recebeInt();
+            switch (opcao) {
+                case 1:
+                	cadastrarTicket();
+                    break;
+                case 2:
+                	mostrarTickets();
+                    break;
+                case 3:
+                    //removerTicket();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida! Tente novamente");
+            }
+        }
+    }
+    
     private static void cadastrarTicket() {
         System.out.print("Selecione o cliente: ");
         for (int i = 0; i < clientes.size(); i++) {
@@ -130,30 +207,29 @@ public class Main {
         System.out.println("Ticket cadastrado com sucesso!");
     }
 
-    private static void consultarTickets() {
-        System.out.println("Tickets:");
+
+    private static void mostrarTickets() {
+
+        if (tickets.isEmpty()) {
+            System.out.println("Nenhum ticket cadastrado.");
+            return;
+        }
+        System.out.println("\n");
+        System.out.println("+-----------------------------------------------------------------+");
+        System.out.println("|                         Lista de Tickets                        |");
+        System.out.println("+-----------------------------------------------------------------+");
         for (Tickets ticket : tickets) {
-            System.out.println("ID: " + ticket.getId());
-            System.out.println("Cliente: " + ticket.getCliente().getNome());
-            System.out.println("Tipo: " + ticket.getTipo());
-            System.out.println("Descrição: " + ticket.getDescricao());
-            System.out.println("Valor dos serviços: " + ticket.getValorServicos());
-            System.out.println("Valor das peças: " + ticket.getValorPecas());
-            System.out.println();
+            System.out.printf("| ID: %-60d|\n", ticket.getId());
+            System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
+            System.out.printf("| Tipo: %-58s|\n", ticket.getClass().getSimpleName());
+            System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
+            System.out.printf("| Valor dos serviços: %-44f|\n", ticket.getValorServicos());
+            System.out.printf("| Valor das peças: %-47f|\n", ticket.getValorPecas());
+            System.out.println("+-----------------------------------------------------------------+");
         }
     }
 
+    
+  
    
-
-    private static void mostrarClientes() {
-        System.out.println("Clientes:");
-        for (Clientes cliente : clientes) {
-            System.out.println("ID: " + cliente.getId());
-            System.out.println("Nome: " + cliente.getNome());
-            System.out.println("Tipo: " + cliente.getTipo());
-            System.out.println("Email: " + cliente.getEmail());
-            System.out.println("Telefone: " + cliente.getTelefone());
-            System.out.println();
-        }
-    }
 }
