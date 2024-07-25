@@ -15,7 +15,17 @@ public class Orçamento extends Tickets {
         return aprovado;
     }
 
-    public void setAprovado(boolean aprovado) {
+    public void setaProvado(boolean aprovado) {
         this.aprovado = aprovado;
+    }
+
+    @Override
+    public double getValorServicos() {
+        return getCliente().calcularValorFinal(super.getValorServicos(), false);
+    }
+
+    @Override
+    public double getValorPecas() {
+        return getCliente().calcularValorFinal(super.getValorPecas(), true);
     }
 }

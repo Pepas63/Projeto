@@ -11,4 +11,13 @@ public class ClienteRevendedor extends Clientes {
     public String getTipo() {
         return "Revendedor";
     }
+
+    @Override
+    public double calcularDesconto(double valor, boolean emPecas) {
+        if (emPecas) {
+            return valor * 0.20; // 20% de desconto em peças
+        } else {
+            return valor * 0.10; // 10% de desconto em serviços
+        }
+    }
 }

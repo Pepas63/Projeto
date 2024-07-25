@@ -17,5 +17,13 @@ public class ClienteFinal extends Clientes {
     public String getTipo() {
         return "Final";
     }
+
+    @Override
+    public double calcularDesconto(double valor, boolean emPecas) {
+        if (isDescontoProntoPagamento()) {
+            return valor * 0.05; // 5% de desconto
+        }
+        return 0;
+    }
 }
 

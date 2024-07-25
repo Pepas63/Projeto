@@ -53,6 +53,13 @@ public abstract class Clientes implements Serializable {
 
     public abstract String getTipo();
     
-   
+ // Método para calcular o desconto
+    public abstract double calcularDesconto(double valor, boolean emPecas);
+
+    // Método para calcular o valor final
+    public double calcularValorFinal(double valor, boolean emPecas) {
+        double desconto = calcularDesconto(valor, emPecas);
+        return valor - desconto;
+    }
 }
 

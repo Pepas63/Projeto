@@ -1,5 +1,6 @@
 package Projeto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GestorTickets {
@@ -41,5 +42,35 @@ public class GestorTickets {
             return;
         }
         tickets.removeIf(t -> t.getId() == numero);
+    }
+
+    
+ // Método para buscar tickets por cliente ID
+    public List<Tickets> buscarTicketsPorCliente(int clienteId) {
+        List<Tickets> resultado = new ArrayList<>();
+        for (Tickets ticket : tickets) {
+            if (ticket.getCliente().getId() == clienteId) {
+                resultado.add(ticket);
+            }
+        }
+        return resultado;
+    }
+    
+    
+    // Novo método para buscar tickets por tipo
+    public List<Tickets> buscarTicketsPorTipo(String tipo) {
+        List<Tickets> ticketsPorTipo = new ArrayList<>();
+        
+        for (Tickets ticket : tickets) {
+            if (tipo.equals("Orçamento") && ticket instanceof Orçamento) {
+                ticketsPorTipo.add(ticket);
+            } else if (tipo.equals("Reparação") && ticket instanceof Reparação) {
+                ticketsPorTipo.add(ticket);
+            } else if (tipo.equals("Relatório") && ticket instanceof Relatório) {
+                ticketsPorTipo.add(ticket);
+            }
+        }
+        
+        return ticketsPorTipo;
     }
 }

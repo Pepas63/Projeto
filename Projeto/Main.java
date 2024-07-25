@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 
 
+
 public class Main {
     // Lista de clientes
 	private static List<Clientes> clientes = new ArrayList<>();
@@ -46,6 +47,7 @@ public class Main {
             System.out.println("+-----------------------------+");
             System.out.println("|1 - Gestão de Clientes       |");
             System.out.println("|2 - Gestão de Tickets        |");
+            System.out.println("|3 - Consultas                |");
             System.out.println("|0 - Sair                     |");
             System.out.println("+-----------------------------+");
             System.out.print("Escolha uma opção: ");
@@ -60,6 +62,10 @@ public class Main {
                     // Ir para o menu de gestão de tickets
                 	menuGestaoTickets();
                     break;      
+                case 3:
+                    // Ir para o menu de consultas
+                	menuconsultas();
+                    break;     
                 case 0:
                     System.out.println("Saindo...");
                     scanner.close();
@@ -120,7 +126,7 @@ public class Main {
         String telefone = MyFunc.recebeString();
 
         if (tipo == 1) {
-            System.out.print("Desconto por Pronto Pagamento (sim/não): ");
+            System.out.print("Desconto por Pagamento Pronto(sim/não): ");
             boolean desconto = MyFunc.recebeBoolean();
             clientes.add(new ClienteFinal(id, nome, email, telefone, desconto));
         } else if (tipo == 2) {
@@ -195,7 +201,7 @@ public class Main {
                     
                 case 3:
                     // Modificar ticket
-                    modificarTicket(opcao, opcao, null, opcao, opcao, false, null);
+                    modificarTicket();
                     break;
                     
                 case 4:
@@ -287,8 +293,10 @@ public class Main {
     }
     
     //Modificar ticket
-    private static void modificarTicket(int idOriginal, int novoTipo, String descricao, double valorServicos, double valorPecas, boolean aprovado, String numeroSerie) {
-        // Buscar o ticket original
+    private static void modificarTicket() {
+        // Solicitar ID do ticket original
+        System.out.print("ID do Ticket a modificar: ");
+        int idOriginal = MyFunc.recebeInt();
         Tickets ticketOriginal = gestorTickets.buscarTicket(idOriginal);
 
         if (ticketOriginal == null) {
@@ -296,48 +304,169 @@ public class Main {
             return;
         }
 
-        // Definir a variável para o novo ticket
-        Tickets novoTicket = null;
-        int novoId = gestorTickets.listarTickets().size() + 1;
-        Date dataAbertura = new Date();
+        // Solicitar o novo ID e tipo do ticket
+        System.out.print("Novo ID do Ticket: ");
+        int novoId = MyFunc.recebeInt();
+        System.out.print("Novo Tipo do Ticket (1 - Orçamento, 2 - Reparação, 3 - Relatório): ");
+        int novoTipo = MyFunc.recebeInt();
 
         // Criar o novo ticket conforme o tipo escolhido
+        Tickets novoTicket;
+        Date dataAbertura = new Date();
         switch (novoTipo) {
             case 1: // Orçamento
-                novoTicket = new Orçamento(novoId, ticketOriginal.getCliente(), dataAbertura, null, descricao, valorServicos, valorPecas, aprovado);
+                novoTicket = new Orçamento(novoId, ticketOriginal.getCliente(), dataAbertura, null, ticketOriginal.getDescricao(), ticketOriginal.getValorServicos(), ticketOriginal.getValorPecas(), false);
                 break;
             case 2: // Reparação
                 if (ticketOriginal instanceof Orçamento || ticketOriginal instanceof Relatório) {
-                    novoTicket = new Reparação(novoId, ticketOriginal.getCliente(), dataAbertura, null, descricao, valorServicos, valorPecas);
-                    // Adicionar referência ao ticket original
-                    novoTicket.setDescricao(ticketOriginal.getDescricao() + " (Originado de ID: " + ticketOriginal.getId() + ")");
+                    novoTicket = new Reparação(novoId, ticketOriginal.getCliente(), dataAbertura, null, "Originado de ID: " + ticketOriginal.getId(), ticketOriginal.getValorServicos(), ticketOriginal.getValorPecas());
                 } else {
-                    System.out.println("Uma reparação não pode ser convertida para outro tipo de ticket.");
+                    System.out.println("Uma reparação só pode ser originada de Orçamento ou Relatório.");
                     return;
                 }
                 break;
             case 3: // Relatório
                 if (ticketOriginal instanceof Orçamento) {
-                    novoTicket = new Relatório(novoId, ticketOriginal.getCliente(), dataAbertura, null, descricao, valorServicos, valorPecas);
-                    // Adicionar referência ao ticket original
-                    novoTicket.setDescricao(ticketOriginal.getDescricao() + " (Originado de ID: " + ticketOriginal.getId() + ")");
+                    novoTicket = new Relatório(novoId, ticketOriginal.getCliente(), dataAbertura, null, "Originado de ID: " + ticketOriginal.getId(), ticketOriginal.getValorServicos(), ticketOriginal.getValorPecas());
                 } else {
-                    System.out.println("Somente um orçamento pode originar um relatório.");
+                    System.out.println("Somente Orçamentos podem originar Relatórios.");
                     return;
                 }
                 break;
             default:
-                System.out.println("Tipo inválido! Tente novamente.");
+                System.out.println("Tipo inválido!");
                 return;
         }
 
-        // Adicionar o novo ticket, remover o antigo e salvar as alterações
+        // Adicionar o novo ticket sem remover o original
         gestorTickets.adicionarTicket(novoTicket);
-        gestorTickets.removerTicket(idOriginal);
         Backup.salvarTickets(gestorTickets.listarTickets(), CAMINHO_FICHEIRO2);
-        System.out.println("Ticket modificado com sucesso!");
+
+        System.out.println("Novo ticket criado com sucesso!");
+    }
+
+    private static void menuconsultas() {
+        while (true) {
+            System.out.println("\n");
+            System.out.println("+------------------------------+");
+            System.out.println("|       Consultar Tickets      |");
+            System.out.println("+------------------------------+");
+            System.out.println("|1 - Listar todos os tickets   |");
+            System.out.println("|2 - Listar tickets por tipo   |");
+            System.out.println("|3 - Listar tickets por cliente|");
+            System.out.println("|0 - Voltar                    |");
+            System.out.println("+------------------------------+");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = MyFunc.recebeInt();
+            switch (opcao) {
+                case 1:
+                	mostrarTickets();
+                    break;
+                case 2:
+                    mostrarTicketsPorTipo();
+                    break;
+                case 3:
+                	mostrarTicketsPorCliente();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida! Tente novamente");
+            }
+        }
+    }
+    private static void mostrarTicketsPorTipo() {
+        System.out.print("Digite o tipo de ticket (1 - Orçamento, 2 - Reparação, 3 - Relatório): ");
+        int tipo = MyFunc.recebeInt();
+        String tipoString;
+
+        switch (tipo) {
+            case 1:
+                tipoString = "Orçamento";
+                break;
+            case 2:
+                tipoString = "Reparação";
+                break;
+            case 3:
+                tipoString = "Relatório";
+                break;
+            default:
+                System.out.println("Tipo inválido!");
+                return;
+        }
+
+        List<Tickets> tickets = gestorTickets.buscarTicketsPorTipo(tipoString);
+        if (tickets.isEmpty()) {
+            System.out.println("Nenhum ticket encontrado para o tipo especificado.");
+            return;
+        }
+
+        System.out.println("\n");
+        System.out.println("+-----------------------------------------------------------------+");
+        System.out.println("|                         Lista de Tickets                        |");
+        System.out.println("+-----------------------------------------------------------------+");
+
+        for (Tickets ticket : tickets) {
+            // Aplicar desconto se necessário
+            double valorServicos = ticket.getValorServicos();
+            double valorPecas = ticket.getValorPecas();
+
+            if (ticket.getCliente() instanceof ClienteFinal) {
+                ClienteFinal clienteFinal = (ClienteFinal) ticket.getCliente();
+                if (clienteFinal.isDescontoProntoPagamento()) {
+                    valorServicos *= 0.9; // Aplicar 10% de desconto
+                    valorPecas *= 0.9; // Aplicar 10% de desconto
+                }
+            }
+
+            // Exibir informações do ticket com formatação
+            System.out.printf("| ID: %-60d|\n", ticket.getId());
+            System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
+            System.out.printf("| Tipo: %-58s|\n", tipoString);
+            System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
+            System.out.printf("| Valor dos Serviços: %-44s|\n", String.format("%.2f", valorServicos));
+            System.out.printf("| Valor das Peças: %-47s|\n", String.format("%.2f", valorPecas));
+            System.out.println("+-----------------------------------------------------------------+");
+        }
     }
     
-  
-   
+    private static void mostrarTicketsPorCliente() {
+        System.out.print("Digite o ID do cliente: ");
+        int clienteId = MyFunc.recebeInt();
+        List<Tickets> tickets = gestorTickets.buscarTicketsPorCliente(clienteId);
+
+        if (tickets.isEmpty()) {
+            System.out.println("Nenhum ticket encontrado para o cliente especificado.");
+            return;
+        }
+
+        System.out.println("\n");
+        System.out.println("+-----------------------------------------------------------------+");
+        System.out.println("|                         Lista de Tickets                        |");
+        System.out.println("+-----------------------------------------------------------------+");
+
+        for (Tickets ticket : tickets) {
+            double valorServicos = ticket.getValorServicos();
+            double valorPecas = ticket.getValorPecas();
+
+            if (ticket.getCliente() instanceof ClienteFinal && ((ClienteFinal) ticket.getCliente()).isDescontoProntoPagamento()) {
+                valorServicos *= 0.9;
+                valorPecas *= 0.9;
+            }
+
+            String tipoString = (ticket instanceof Orçamento) ? "Orçamento" :
+                                (ticket instanceof Reparação) ? "Reparação" : "Relatório";
+
+            System.out.printf("| ID: %-60d|\n", ticket.getId());
+            System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
+            System.out.printf("| Tipo: %-58s|\n", tipoString);
+            System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
+            System.out.printf("| Valor dos Serviços: %-44s|\n", String.format("%.2f", valorServicos));
+            System.out.printf("| Valor das Peças: %-47s|\n", String.format("%.2f", valorPecas));
+            System.out.println("+-----------------------------------------------------------------+");
+        }
+    }
+
+
 }
