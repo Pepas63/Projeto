@@ -66,7 +66,7 @@ public class Main {
             System.out.println("+-----------------------------+");
             System.out.println("|1 - Adicionar Cliente        |");
             System.out.println("|2 - Mostrar Clientes         |");
-            System.out.println("|3 - Remover Cliente (WIP)    |");
+            System.out.println("|3 - Remover Cliente          |");
             System.out.println("|0 - Voltar                   |");
             System.out.println("+-----------------------------+");
             System.out.print("Escolha uma opção: ");
@@ -80,7 +80,7 @@ public class Main {
                 	mostrarClientes();
                     break;
                 case 3:
-                    //removerCliente();
+                    removerCliente();
                     break;
                 case 0:
                     return;
@@ -114,7 +114,21 @@ public class Main {
         Backup.salvarClientes(clientes, CAMINHO_FICHEIRO);
     }
 
-    
+    private static void removerCliente() {
+        System.out.print("Informe o ID do cliente a ser removido: ");
+        int clienteId = MyFunc.recebeInt();
+
+        // Localiza o cliente a ser removido
+        boolean removido = clientes.removeIf(cliente -> cliente.getId() == clienteId);
+
+        if (removido) {
+            System.out.println("Cliente removido com sucesso!");
+            // Atualiza o arquivo de clientes após remoção
+            Backup.salvarClientes(clientes, CAMINHO_FICHEIRO);
+        } else {
+            System.out.println("Cliente não encontrado!");
+        }
+    }
     
     private static void mostrarClientes() {
         if (clientes.isEmpty()) {
@@ -145,7 +159,7 @@ public class Main {
             System.out.println("+-----------------------------+");
             System.out.println("|1 - Adicionar Ticket         |");
             System.out.println("|2 - Mostrar Tickets          |");
-            System.out.println("|3 - Remover Ticket  (WIP)    |");
+            System.out.println("|3 - Remover Ticket           |");
             System.out.println("|0 - Voltar                   |");
             System.out.println("+-----------------------------+");
             System.out.print("Escolha uma opção: ");
@@ -159,7 +173,7 @@ public class Main {
                 	mostrarTickets();
                     break;
                 case 3:
-                    //removerTicket();
+                    removerTicket();
                     break;
                 case 0:
                     return;
@@ -170,10 +184,12 @@ public class Main {
     }
     
     private static void cadastrarTicket() {
-        System.out.print("Selecione o cliente: ");
+        System.out.println("Selecione o cliente: ");
         for (int i = 0; i < clientes.size(); i++) {
-            System.out.println((i + 1) + ". " + clientes.get(i).getNome());
+            System.out.println((i + 1) + "." + clientes.get(i).getNome());
         }
+        System.out.println("");
+        System.out.print("Insira o Id:");
         int clienteId = MyFunc.recebeInt();
         Clientes cliente = clientes.get(clienteId - 1);
 
@@ -197,6 +213,10 @@ public class Main {
             case 2:
                 ticket = new Reparação(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
                 break;
+                
+            case 3:
+            	ticket = new Relatório(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
+            	break;
             default:
                 System.out.println("Tipo inválido!");
                 return;
@@ -221,7 +241,7 @@ public class Main {
         for (Tickets ticket : tickets) {
             System.out.printf("| ID: %-60d|\n", ticket.getId());
             System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
-            System.out.printf("| Tipo: %-58s|\n", ticket.getClass().getSimpleName());
+            System.out.printf("| Tipo: %-58s|\n", ticket.getTipo());
             System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
             System.out.printf("| Valor dos serviços: %-44f|\n", ticket.getValorServicos());
             System.out.printf("| Valor das peças: %-47f|\n", ticket.getValorPecas());
@@ -229,6 +249,13 @@ public class Main {
         }
     }
 
+    private static void removerTicket() {
+        System.out.print("ID do Ticket a remover: ");
+        int id = MyFunc.recebeInt();
+        gestorTickets.removerTicket(id);
+        Backup.salvarTickets(gestorTickets.listarTickets(), CAMINHO_FICHEIRO2);
+        System.out.println("Ticket removido com sucesso!");
+    }
     
   
    

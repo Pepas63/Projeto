@@ -52,5 +52,7 @@ public abstract class Clientes implements Serializable {
     }
 
     public abstract String getTipo();
+    
+   
 }
 
