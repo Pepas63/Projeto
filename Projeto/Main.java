@@ -5,18 +5,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Main {
-    private static List<Clientes> clientes = new ArrayList<>();
+	private static List<Clientes> clientes = new ArrayList<>();
     private static List<Tickets> tickets = new ArrayList<>();
     private static final String CAMINHO_FICHEIRO = "clientes.dat";
+    private static final String CAMINHO_FICHEIRO2 = "tickets.dat";
+    private static GestorTickets gestorTickets;
 
     public static void main(String[] args) {
         clientes = Backup.listarClientes(CAMINHO_FICHEIRO);
-        tickets = Backup.listarTickets(CAMINHO_FICHEIRO);
+        tickets = Backup.listarTickets(CAMINHO_FICHEIRO2);
+        gestorTickets = new GestorTickets(tickets);
         
         menu();
 
-        Backup.salvarTickets(tickets, CAMINHO_FICHEIRO);
+        Backup.salvarTickets(tickets, CAMINHO_FICHEIRO2);
         Backup.salvarClientes(clientes, CAMINHO_FICHEIRO);
     }
 
@@ -28,9 +32,9 @@ public class Main {
             System.out.println("Menu:");
             System.out.println("1. Cadastrar cliente");
             System.out.println("2. Cadastrar ticket");
-            System.out.println("3. Consultar tickets");
-            System.out.println("4. Fechar ticket");
-            System.out.println("5. Mostrar clientes");
+            System.out.println("3. Mostrar tickets");
+            System.out.println("4. Mostrar clientes");
+            System.out.println("5. WIP");
             System.out.println("6. Sair");
             System.out.println("");
 
@@ -48,10 +52,10 @@ public class Main {
                     consultarTickets();
                     break;
                 case 4:
-                    fecharTicket(scanner);
+                	mostrarClientes();
                     break;
                 case 5:
-                    mostrarClientes();
+                    //
                     break;        
                 case 6:
                     System.out.println("Saindo...");
@@ -106,16 +110,26 @@ public class Main {
         System.out.print("Valor das peças: ");
         double valorPecas = MyFunc.recebeDouble();
 
-        Backup.salvarTickets(tickets, CAMINHO_FICHEIRO);
+        Tickets ticket;
+        switch (tipo) {
+            case 1:
+                System.out.print("Aprovado (sim/não): ");
+                boolean aprovado = MyFunc.recebeBoolean();
+                ticket = new Orçamento(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas, aprovado);
+                break;
+            case 2:
+                ticket = new Reparação(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
+                break;
+            default:
+                System.out.println("Tipo inválido!");
+                return;
+        }
+
+        gestorTickets.adicionarTicket(ticket);
+        Backup.salvarTickets(gestorTickets.listarTickets(), CAMINHO_FICHEIRO2);
         System.out.println("Ticket cadastrado com sucesso!");
     }
 
-
-    
-    
-    
-    
-    
     private static void consultarTickets() {
         System.out.println("Tickets:");
         for (Tickets ticket : tickets) {
@@ -129,17 +143,7 @@ public class Main {
         }
     }
 
-    private static void fecharTicket(Scanner scanner) {
-        System.out.print("Selecione o ticket a fechar: ");
-        for (int i = 0; i < tickets.size(); i++) {
-            System.out.println((i + 1) + ". " + tickets.get(i).getDescricao());
-        }
-        int ticketId = scanner.nextInt();
-        Tickets ticket = tickets.get(ticketId - 1);
-
-        ticket.setDataFechamento(new Date());
-        System.out.println("Ticket fechado com sucesso!");
-    }
+   
 
     private static void mostrarClientes() {
         System.out.println("Clientes:");

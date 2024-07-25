@@ -38,11 +38,11 @@ public class Backup {
         return clientes;
     }
     
-    public static void salvarTickets(List<Tickets> tickets, String caminhoFicheiro) {
-        File f = new File(caminhoFicheiro);
+    public static void salvarTickets(List<Tickets> tickets, String caminhoFicheiro2) {
+        File f = new File(caminhoFicheiro2);
         try {
             f.createNewFile();
-            ObjectOutputStream ficheiro = new ObjectOutputStream(new FileOutputStream(caminhoFicheiro));
+            ObjectOutputStream ficheiro = new ObjectOutputStream(new FileOutputStream(caminhoFicheiro2));
             ficheiro.writeObject(tickets);
             System.out.println("Lista de tickets foi arquivada com sucesso.");
             System.out.println("No ficheiro: " + f.getAbsolutePath());
@@ -54,13 +54,13 @@ public class Backup {
     }
 
 @SuppressWarnings("unchecked")
-public static ArrayList<Tickets> listarTickets(String caminhoFicheiro) {
+public static ArrayList<Tickets> listarTickets(String caminhoFicheiro2) {
     ArrayList<Tickets> tickets = new ArrayList<>();
-    File ficheiro = new File(caminhoFicheiro);
+    File ficheiro = new File(caminhoFicheiro2);
     if (!ficheiro.exists()) {
-        ficheiro = new File(caminhoFicheiro);
+        ficheiro = new File(caminhoFicheiro2);
     } else {
-        try (ObjectInputStream f = new ObjectInputStream(new FileInputStream(caminhoFicheiro))) {
+        try (ObjectInputStream f = new ObjectInputStream(new FileInputStream(caminhoFicheiro2))) {
             tickets = (ArrayList<Tickets>) f.readObject();
             System.out.println("Restauro dos dados realizado com sucesso.");
         } catch (IOException | ClassNotFoundException e) {

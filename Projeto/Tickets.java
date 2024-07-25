@@ -3,24 +3,20 @@ package Projeto;
 import java.io.Serializable;
 import java.util.Date;
 
-
-
-public class Tickets implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
-	//Declaração de variáveis
-	private int id;
+public abstract class Tickets implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    //Declaração de variáveis
+    private int id;
     private Clientes cliente;
-    private String tipo; // "Orçamento", "Reparação" ou "Relatório"
+    private String tipo;
     private Date dataCriacao;
     private Date dataFechamento;
     private String descricao;
     private double valorServicos;
     private double valorPecas;
 
-
-    //Construtor da classe Ticket
+    //Construtor da class Ticket
     public Tickets(int id, Clientes cliente, String tipo, Date dataCriacao, Date dataFechamento, String descricao, double valorServicos, double valorPecas) {
         this.id = id;
         this.cliente = cliente;
