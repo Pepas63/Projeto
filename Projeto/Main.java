@@ -5,13 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-
-
-
-
 public class Main {
     // Lista de clientes
-	private static List<Clientes> clientes = new ArrayList<>();
+    private static List<Clientes> clientes = new ArrayList<>();
     // Lista de tickets
     private static List<Tickets> tickets = new ArrayList<>();
     // Caminho do arquivo de clientes
@@ -42,7 +38,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-        	System.out.println("+-----------------------------+");
+            System.out.println("+-----------------------------+");
             System.out.println("|           MENU              |");
             System.out.println("+-----------------------------+");
             System.out.println("|1 - Gestão de Clientes       |");
@@ -56,15 +52,15 @@ public class Main {
             switch (opcao) {
                 case 1:
                     // Ir para o menu de gestão de clientes
-                	menuGestaoClientes();
+                    menuGestaoClientes();
                     break;
                 case 2:
                     // Ir para o menu de gestão de tickets
-                	menuGestaoTickets();
+                    menuGestaoTickets();
                     break;      
                 case 3:
                     // Ir para o menu de consultas
-                	menuconsultas();
+                    menuConsultas();
                     break;     
                 case 0:
                     System.out.println("Saindo...");
@@ -95,11 +91,11 @@ public class Main {
             switch (opcao) {
                 case 1:
                     // Cadastrar novo cliente
-                	cadastrarCliente();
+                    cadastrarCliente();
                     break;
                 case 2:
                     // Mostrar lista de clientes
-                	mostrarClientes();
+                    mostrarClientes();
                     break;
                 case 3:
                     // Remover cliente
@@ -112,6 +108,7 @@ public class Main {
             }
         }
     }
+
     // Cadastrar novo cliente
     private static void cadastrarCliente() {
         System.out.print("Id do Cliente: ");
@@ -126,7 +123,7 @@ public class Main {
         String telefone = MyFunc.recebeString();
 
         if (tipo == 1) {
-            System.out.print("Desconto por Pagamento Pronto(sim/não): ");
+            System.out.print("Desconto por Pagamento Pronto (sim/não): ");
             boolean desconto = MyFunc.recebeBoolean();
             clientes.add(new ClienteFinal(id, nome, email, telefone, desconto));
         } else if (tipo == 2) {
@@ -136,6 +133,7 @@ public class Main {
         }
         Backup.salvarClientes(clientes, CAMINHO_FICHEIRO);
     }
+
     // Remover cliente
     private static void removerCliente() {
         System.out.print("Informe o ID do cliente a ser removido: ");
@@ -152,6 +150,7 @@ public class Main {
             System.out.println("Cliente não encontrado!");
         }
     }
+
     // Mostrar lista de clientes
     private static void mostrarClientes() {
         if (clientes.isEmpty()) {
@@ -192,23 +191,20 @@ public class Main {
             switch (opcao) {
                 case 1:
                     // Cadastrar novo ticket
-                	cadastrarTicket();
+                    cadastrarTicket();
                     break;
                 case 2:
                     // Mostrar lista de tickets
-                	mostrarTickets();
+                    mostrarTickets();
                     break;
-                    
                 case 3:
                     // Modificar ticket
                     modificarTicket();
                     break;
-                    
                 case 4:
                     // Remover ticket
                     removerTicket();
                     break;
-                   
                 case 0:
                     return;
                 default:
@@ -216,6 +212,7 @@ public class Main {
             }
         }
     }
+
     // Cadastrar novo ticket
     private static void cadastrarTicket() {
         System.out.println("Selecione o cliente: ");
@@ -247,10 +244,9 @@ public class Main {
             case 2:
                 ticket = new Reparação(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
                 break;
-                
             case 3:
-            	ticket = new Relatório(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
-            	break;
+                ticket = new Relatório(gestorTickets.listarTickets().size() + 1, cliente, new Date(), null, descricao, valorServicos, valorPecas);
+                break;
             default:
                 System.out.println("Tipo inválido!");
                 return;
@@ -263,11 +259,12 @@ public class Main {
 
     // Mostrar lista de tickets
     private static void mostrarTickets() {
-
         if (tickets.isEmpty()) {
             System.out.println("Nenhum ticket cadastrado.");
             return;
         }
+        
+        
         System.out.println("\n");
         System.out.println("+-----------------------------------------------------------------+");
         System.out.println("|                         Lista de Tickets                        |");
@@ -292,7 +289,7 @@ public class Main {
         System.out.println("Ticket removido com sucesso!");
     }
     
-    //Modificar ticket
+    // Modificar ticket
     private static void modificarTicket() {
         // Solicitar ID do ticket original
         System.out.print("ID do Ticket a modificar: ");
@@ -345,7 +342,8 @@ public class Main {
         System.out.println("Novo ticket criado com sucesso!");
     }
 
-    private static void menuconsultas() {
+    // Menu de consultas
+    private static void menuConsultas() {
         while (true) {
             System.out.println("\n");
             System.out.println("+------------------------------+");
@@ -361,13 +359,13 @@ public class Main {
             int opcao = MyFunc.recebeInt();
             switch (opcao) {
                 case 1:
-                	mostrarTickets();
+                    mostrarTickets();
                     break;
                 case 2:
                     mostrarTicketsPorTipo();
                     break;
                 case 3:
-                	mostrarTicketsPorCliente();
+                    mostrarTicketsPorCliente();
                     break;
                 case 0:
                     return;
@@ -376,6 +374,8 @@ public class Main {
             }
         }
     }
+
+    // Mostrar tickets por tipo
     private static void mostrarTicketsPorTipo() {
         System.out.print("Digite o tipo de ticket (1 - Orçamento, 2 - Reparação, 3 - Relatório): ");
         int tipo = MyFunc.recebeInt();
@@ -407,30 +407,20 @@ public class Main {
         System.out.println("|                         Lista de Tickets                        |");
         System.out.println("+-----------------------------------------------------------------+");
 
-        for (Tickets ticket : tickets) {
-            // Aplicar desconto se necessário
-            double valorServicos = ticket.getValorServicos();
-            double valorPecas = ticket.getValorPecas();
+        
 
-            if (ticket.getCliente() instanceof ClienteFinal) {
-                ClienteFinal clienteFinal = (ClienteFinal) ticket.getCliente();
-                if (clienteFinal.isDescontoProntoPagamento()) {
-                    valorServicos *= 0.9; // Aplicar 10% de desconto
-                    valorPecas *= 0.9; // Aplicar 10% de desconto
-                }
-            }
-
-            // Exibir informações do ticket com formatação
+            for (Tickets ticket : tickets) {
             System.out.printf("| ID: %-60d|\n", ticket.getId());
             System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
             System.out.printf("| Tipo: %-58s|\n", tipoString);
             System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
-            System.out.printf("| Valor dos Serviços: %-44s|\n", String.format("%.2f", valorServicos));
-            System.out.printf("| Valor das Peças: %-47s|\n", String.format("%.2f", valorPecas));
+            System.out.printf("| Valor dos Serviços: %-44s|\n", ticket.getValorServicos());
+            System.out.printf("| Valor das Peças: %-47s|\n", ticket.getValorPecas());
             System.out.println("+-----------------------------------------------------------------+");
         }
     }
     
+    // Mostrar tickets por cliente
     private static void mostrarTicketsPorCliente() {
         System.out.print("Digite o ID do cliente: ");
         int clienteId = MyFunc.recebeInt();
@@ -446,27 +436,17 @@ public class Main {
         System.out.println("|                         Lista de Tickets                        |");
         System.out.println("+-----------------------------------------------------------------+");
 
+       
+
+            
         for (Tickets ticket : tickets) {
-            double valorServicos = ticket.getValorServicos();
-            double valorPecas = ticket.getValorPecas();
-
-            if (ticket.getCliente() instanceof ClienteFinal && ((ClienteFinal) ticket.getCliente()).isDescontoProntoPagamento()) {
-                valorServicos *= 0.9;
-                valorPecas *= 0.9;
-            }
-
-            String tipoString = (ticket instanceof Orçamento) ? "Orçamento" :
-                                (ticket instanceof Reparação) ? "Reparação" : "Relatório";
-
             System.out.printf("| ID: %-60d|\n", ticket.getId());
             System.out.printf("| Cliente: %-55s|\n", ticket.getCliente().getNome());
-            System.out.printf("| Tipo: %-58s|\n", tipoString);
+            System.out.printf("| Tipo: %-58s|\n", ticket.getTipo());
             System.out.printf("| Descrição: %-53s|\n", ticket.getDescricao());
-            System.out.printf("| Valor dos Serviços: %-44s|\n", String.format("%.2f", valorServicos));
-            System.out.printf("| Valor das Peças: %-47s|\n", String.format("%.2f", valorPecas));
+            System.out.printf("| Valor dos Serviços: %-44s|\n", ticket.getValorServicos());
+            System.out.printf("| Valor das Peças: %-47s|\n", ticket.getValorPecas());
             System.out.println("+-----------------------------------------------------------------+");
         }
     }
-
-
 }

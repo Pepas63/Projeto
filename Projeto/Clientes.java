@@ -2,15 +2,18 @@ package Projeto;
 
 import java.io.Serializable;
 
+// Classe abstrata Clientes que implementa Serializable para permitir a serialização dos objetos
 public abstract class Clientes implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // Identificador único para serialização
 
+    // Atributos privados da classe
     private int id;
     private String nome;
     private String email;
     private String telefone;
 
+    // Construtor da classe Clientes que inicializa os atributos
     public Clientes(int id, String nome, String email, String telefone) {
         this.id = id;
         this.nome = nome;
@@ -18,7 +21,7 @@ public abstract class Clientes implements Serializable {
         this.telefone = telefone;
     }
 
-    // Getters e setters
+    // Métodos getter e setter para acessar e modificar os atributos privados
     public int getId() {
         return id;
     }
@@ -51,15 +54,17 @@ public abstract class Clientes implements Serializable {
         this.telefone = telefone;
     }
 
+    // Método abstrato que deve ser implementado pelas subclasses para retornar o tipo de cliente
     public abstract String getTipo();
-    
- // Método para calcular o desconto
+
+    // Método abstrato que deve ser implementado pelas subclasses para calcular o desconto
     public abstract double calcularDesconto(double valor, boolean emPecas);
 
-    // Método para calcular o valor final
+    // Método para calcular o valor final aplicando o desconto calculado
     public double calcularValorFinal(double valor, boolean emPecas) {
-        double desconto = calcularDesconto(valor, emPecas);
-        return valor - desconto;
+        double desconto = calcularDesconto(valor, emPecas); // Calcula o desconto
+        return valor - desconto; // Retorna o valor final após aplicar o desconto
     }
 }
+
 
